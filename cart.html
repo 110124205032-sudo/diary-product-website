@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | Fresh Dairy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left"><div class="logo">🥛 Fresh Dairy</div></div>
+        <div class="nav-center"><input type="text" class="search-bar" placeholder="Search milk, paneer, butter..." disabled></div>
+        <div class="nav-right">
+            <a href="index.html">
+                <button class="icon-btn" aria-label="Home">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </button>
+            </a>
+            <a href="index.html">
+                <button class="icon-btn cart-btn active" aria-label="Cart">
+                    <div class="css-cart css-cart-navbar">
+                        <div class="cart-handle"></div><div class="cart-frame"></div><div class="cart-basket"></div><div class="cart-base"></div><div class="cart-wheel left"></div><div class="cart-wheel right"></div>
+                    </div>
+                    <span class="badge">0</span>
+                </button>
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="cart-page">
+            <div class="cart-header">
+                <h1>My Cart</h1>
+                <a href="index.html" class="continue-link">Continue Shopping →</a>
+            </div>
+            
+            <div class="cart-content">
+                <div class="cart-container"></div>
+                
+                <div class="cart-totals">
+                    <!-- Totals populated by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
