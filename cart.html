@@ -13,23 +13,21 @@
     <nav class="navbar">
         <div class="nav-left"><div class="logo">🥛 Fresh Dairy</div></div>
         <div class="nav-center"><input type="text" class="search-bar" placeholder="Search milk, paneer, butter..." disabled></div>
-        <div class="nav-right">
-            <a href="index.html">
-                <button class="icon-btn" aria-label="Home">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                </button>
+<div class="nav-right">
+<a href="index.html" style="margin-right: 8px;">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
             </a>
-            <a href="index.html">
-                <button class="icon-btn cart-btn active" aria-label="Cart">
-                    <div class="css-cart css-cart-navbar">
-                        <div class="cart-handle"></div><div class="cart-frame"></div><div class="cart-basket"></div><div class="cart-base"></div><div class="cart-wheel left"></div><div class="cart-wheel right"></div>
-                    </div>
-                    <span class="badge">0</span>
-                </button>
-            </a>
+            <div class="icon-container">
+              <a href="index.html" class="icon-wrapper" style="text-decoration: none;">
+                <svg viewBox="0 0 24 24" class="base-icon cart-active" aria-label="Cart">
+                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.44C4.52 15.37 4.5 15.67 4.5 16c0 1.1.9 2 2 2h12v-2H6.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                <span class="badge badge-yellow">0</span>
+              </a>
+            </div>
         </div>
     </nav>
 
@@ -37,7 +35,6 @@
         <div class="cart-page">
             <div class="cart-header">
                 <h1>My Cart</h1>
-                <a href="index.html" class="continue-link">Continue Shopping →</a>
             </div>
             
             <div class="cart-content">
