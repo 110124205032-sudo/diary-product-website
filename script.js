@@ -174,11 +174,11 @@ function getCartTotal() {
 
 function updateBadge() {
     const cart = getCart();
-    const badge = document.querySelector('.badge');
-    if (badge) {
+    const cartBadge = document.querySelector('.badge-yellow');
+    if (cartBadge) {
         const count = cart.reduce((sum, item) => sum + item.qty, 0);
-        badge.textContent = count || '0';
-        badge.classList.toggle('badge-pop', count > 0);
+        cartBadge.textContent = count || '0';
+        cartBadge.classList.toggle('badge-pop', count > 0);
     }
 }
 
@@ -297,20 +297,29 @@ function renderCart() {
     if (cart.length === 0) {
         cartContainer.innerHTML = `
             <div class="empty-cart">
-                <div class="empty-icon">🛒</div>
-                <h2>Your cart is empty</h2>
-                <p>Add some fresh dairy products to get started!</p>
+                <img src="empty cart.jpeg" alt="Empty Cart" style="height:400px;width:800px; margin-top:-98px;" class="empty-cart-image">
+                
                 <a href="index.html"><button class="continue-btn">Continue Shopping</button></a>
             </div>
         `;
-        updateTotals(0);
+        // Hide cart-totals when cart is empty
+        const totalsEl = document.querySelector('.cart-totals');
+        if (totalsEl) {
+            totalsEl.style.display = 'none';
+        }
         return;
     }
 
-    let itemsHtml = cart.map(item => `
+let itemsHtml = cart.map(item => `
         <tr>
             <td>${item.name}</td>
-            <td>${item.qty}</td>
+            <td>
+                <div class="quantity-controls" style="gap: 8px;">
+                    <button class="qty-btn decrement" data-id="${item.id}">-</button>
+                    <span class="qty">${item.qty}</span>
+                    <button class="qty-btn increment" data-id="${item.id}">+</button>
+                </div>
+            </td>
             <td>₹${item.price.toFixed(0)}</td>
             <td>₹${(item.price * item.qty).toFixed(0)}</td>
             <td><button class="remove-btn" data-id="${item.id}">×</button></td>
@@ -322,7 +331,7 @@ function renderCart() {
             <thead>
                 <tr>
                     <th>Item</th>
-                    <th>NOs</th>
+                    <th>Quantity</th>
                     <th>Price</th>
                     <th>Total</th>
                     <th></th>
@@ -336,9 +345,18 @@ function renderCart() {
     `;
 
     // Event listeners for cart page
-    document.querySelectorAll('.remove-btn').forEach(btn => {
+document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             removeFromCart(parseInt(btn.dataset.id));
+        });
+    });
+
+    // Cart quantity controls
+    document.querySelectorAll('.qty-btn.decrement, .qty-btn.increment').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const productId = parseInt(btn.dataset.id);
+            const delta = btn.classList.contains('increment') ? 1 : -1;
+            updateQty(productId, delta);
         });
     });
 
@@ -358,6 +376,10 @@ function updateTotals(subtotal) {
 
     const totalsEl = document.querySelector('.cart-totals');
     if (totalsEl) {
+        // Show cart-totals when there are items
+        if (subtotal > 0) {
+            totalsEl.style.display = 'block';
+        }
         totalsEl.innerHTML = `
             <div class="total-row">
                 <span>Subtotal</span>
