@@ -13,15 +13,22 @@
     <nav class="navbar">
         <div class="nav-left"><div class="logo">🥛 Fresh Dairy</div></div>
         <div class="nav-center"><input type="text" class="search-bar" placeholder="Search milk, paneer, butter..."></div>
-        <div class="nav-right">
-            <a href="cart.html">
-                <button class="icon-btn cart-btn" aria-label="Cart">
-                    <div class="css-cart css-cart-navbar">
-                        <div class="cart-handle"></div><div class="cart-frame"></div><div class="cart-basket"></div><div class="cart-base"></div><div class="cart-wheel left"></div><div class="cart-wheel right"></div>
-                    </div>
-                    <span class="badge">0</span>
-                </button>
-            </a>
+<div class="nav-right">
+            <div class="icon-container">
+              <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24" class="base-icon" aria-label="Notifications">
+                  <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+                <span class="badge badge-red">3</span>
+              </div>
+
+              <a href="cart.html" class="icon-wrapper" style="text-decoration: none;">
+                <svg viewBox="0 0 24 24" class="base-icon" aria-label="Cart">
+                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.44C4.52 15.37 4.5 15.67 4.5 16c0 1.1.9 2 2 2h12v-2H6.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                <span class="badge badge-yellow">0</span>
+              </a>
+            </div>
         </div>
     </nav>
     <main class="main-content">
