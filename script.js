@@ -1,3 +1,4 @@
+
 // Login check
 if (localStorage.getItem('isLoggedIn') !== 'true') {
     window.location.href = 'login.html';
@@ -180,7 +181,32 @@ function updateBadge() {
         cartBadge.textContent = count || '0';
         cartBadge.classList.toggle('badge-pop', count > 0);
     }
+    updateFloatingCart();
 }
+
+
+function updateFloatingCart() {
+    const cart = getCart();
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    
+    const cartElement = document.getElementById('floatingCart');
+    if (!cartElement) return;
+    
+    const countDisplay = document.getElementById('itemCountDisplay');
+    const priceDisplay = document.getElementById('totalPriceDisplay');
+    
+    if (countDisplay) countDisplay.innerText = totalItems;
+    if (priceDisplay) priceDisplay.innerText = Math.round(totalPrice);
+    
+    if (totalItems > 0) {
+        cartElement.classList.add('active');
+    } else {
+        cartElement.classList.remove('active');
+    }
+}
+
+
 
 // Extract products from DOM
 function extractProducts() {
@@ -288,85 +314,95 @@ function initProducts() {
 
 // Render cart for cart.html
 function renderCart() {
-    const cartContainer = document.querySelector('.cart-container');
-    if (!cartContainer) return;
+    const itemsContainer = document.getElementById('cartItemsContainer');
+    const itemCountEl = document.getElementById('cartItemCount');
+    const subtotalEl = document.getElementById('cartSubtotal');
+    const grandTotalEl = document.getElementById('grandTotal');
+    const subtotalAmountEl = document.getElementById('subtotalAmount');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const clearBtn = document.getElementById('clearCartBtn');
+    
+    if (!itemsContainer) return;
 
     const cart = getCart();
     const subtotal = getCartTotal();
+    const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
+    const delivery = 10;
+    const platform = 10;
+    const grandTotal = subtotal + delivery + platform;
+
+    // Update stats
+    itemCountEl.textContent = `${itemCount} items`;
+    subtotalEl.textContent = `₹${subtotal.toFixed(0)}`;
+    grandTotalEl.textContent = `₹${grandTotal.toFixed(0)}`;
+    subtotalAmountEl.textContent = `₹${subtotal.toFixed(0)}`;
 
     if (cart.length === 0) {
-        cartContainer.innerHTML = `
+        itemsContainer.innerHTML = `
             <div class="empty-cart">
-                <img src="empty cart.jpeg" alt="Empty Cart" style="height:400px;width:800px; margin-top:-98px;" class="empty-cart-image">
-                
-                <a href="index.html"><button class="continue-btn">Continue Shopping</button></a>
+                <img src="empty cart.jpeg" alt="Empty Cart" class="empty-cart-image">
+                <h2>Your cart is empty</h2>
+                <p>Add some fresh dairy products to get started!</p>
+                <a href="index.html" class="continue-btn">Continue Shopping</a>
             </div>
         `;
-        // Hide cart-totals when cart is empty
-        const totalsEl = document.querySelector('.cart-totals');
-        if (totalsEl) {
-            totalsEl.style.display = 'none';
-        }
+        checkoutBtn.style.display = 'none';
+        clearBtn.style.display = 'none';
         return;
     }
 
-let itemsHtml = cart.map(item => `
-        <tr>
-            <td>${item.name}</td>
-            <td>
-                <div class="quantity-controls" style="gap: 8px;">
-                    <button class="qty-btn decrement" data-id="${item.id}">-</button>
-                    <span class="qty">${item.qty}</span>
-                    <button class="qty-btn increment" data-id="${item.id}">+</button>
+    // Show buttons
+    checkoutBtn.style.display = 'block';
+    clearBtn.style.display = 'inline-flex';
+
+    // Render items as cards
+    const itemsHtml = cart.map(item => {
+        const itemTotal = item.price * item.qty;
+        return `
+            <div class="cart-item-card" data-id="${item.id}">
+                <img src="https://via.placeholder.com/120x120/EEF2F7/6B7280?text=${encodeURIComponent(item.name.split(' ')[0])}" 
+                     alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>${item.name}</h3>
+                    <div class="cart-item-price">₹${item.price.toFixed(0)}</div>
                 </div>
-            </td>
-            <td>₹${item.price.toFixed(0)}</td>
-            <td>₹${(item.price * item.qty).toFixed(0)}</td>
-            <td><button class="remove-btn" data-id="${item.id}">×</button></td>
-        </tr>
-    `).join('');
+                <div class="cart-item-controls">
+                    <div class="quantity-controls">
+                        <button class="qty-btn decrement" data-id="${item.id}">-</button>
+                        <span class="qty">${item.qty}</span>
+                        <button class="qty-btn increment" data-id="${item.id}">+</button>
+                    </div>
+                    <div>₹${itemTotal.toFixed(0)}</div>
+                    <button class="remove-btn" data-id="${item.id}">×</button>
+                </div>
+            </div>
+        `;
+    }).join('');
 
-    cartContainer.innerHTML = `
-        <table class="cart-table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                ${itemsHtml}
-            </tbody>
-        </table>
-        <button class="clear-cart-btn">Clear Cart</button>
-    `;
+    itemsContainer.innerHTML = itemsHtml;
 
-    // Event listeners for cart page
-document.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            removeFromCart(parseInt(btn.dataset.id));
-        });
+    // Event listeners
+    itemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.id)));
     });
 
-    // Cart quantity controls
-    document.querySelectorAll('.qty-btn.decrement, .qty-btn.increment').forEach(btn => {
+    itemsContainer.querySelectorAll('.qty-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const productId = parseInt(btn.dataset.id);
+            const id = parseInt(btn.dataset.id);
             const delta = btn.classList.contains('increment') ? 1 : -1;
-            updateQty(productId, delta);
+            updateQty(id, delta);
         });
     });
 
-    document.querySelector('.clear-cart-btn')?.addEventListener('click', () => {
+    clearBtn.addEventListener('click', () => {
         localStorage.removeItem('cart');
         renderCart();
         updateBadge();
     });
 
-    updateTotals(subtotal);
+    checkoutBtn.addEventListener('click', () => {
+        alert('Checkout coming soon! Total: ₹' + grandTotal.toFixed(0));
+    });
 }
 
 function updateTotals(subtotal) {
@@ -374,7 +410,7 @@ function updateTotals(subtotal) {
     const platform = 10;
     const grandTotal = subtotal + delivery + platform;
 
-    const totalsEl = document.querySelector('.cart-totals');
+    const totalsEl = document.querySelector('.cart-totals-below');
     if (totalsEl) {
         // Show cart-totals when there are items
         if (subtotal > 0) {
@@ -405,6 +441,8 @@ function updateTotals(subtotal) {
 // Init on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     updateBadge();
+    updateFloatingCart();
+
     
     if (document.querySelector('.products-category')) {
         // index.html - init products
@@ -414,3 +452,4 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCart();
     }
 });
+
